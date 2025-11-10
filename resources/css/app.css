@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* global maroon theme class */
+.maroon-theme {
+    @apply bg-maroon text-white;
+}
