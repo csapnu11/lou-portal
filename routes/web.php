@@ -3,6 +3,12 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Enums\UserRole;
+use App\Http\Controllers\Private\AnnouncementController as PrivateAnnouncementController;
+use App\Http\Controllers\Public\AnnouncementController as PublicAnnouncementController;
+
+
+
+
 Route::get('/', function () {
     if (Auth::check()) {
         return redirect('/dashboard');
@@ -21,9 +27,6 @@ Route::middleware('auth')->group(function () {
 });
 
 
-// Public route (no auth required)
-Route::get('/public/announcements', fn() => view('public.announcements'));
-
 // Private routes mapping
 $privateRoutes = [
     '/private/faculty' => [UserRole::FACULTY, 'faculty'],
@@ -40,6 +43,19 @@ foreach ($privateRoutes as $uri => [$roles, $view]) {
     Route::middleware(['auth', App\Http\Middleware\RoleMiddleware::class . ':' . $rolesString])
         ->get($uri, fn() => view("private.$view"));
 }
+
+// Announcement Controllers
+
+Route::middleware('auth')->prefix('private')->group(function () {
+    Route::resource('announcements', PrivateAnnouncementController::class)
+        ->only(['index', 'create', 'store', 'destroy'])
+        ->names('private.announcements');
+});
+
+Route::prefix('public')->group(function () {
+    Route::get('announcements', [PublicAnnouncementController::class, 'index'])
+        ->name('public.announcements.index');
+});
 
 
 

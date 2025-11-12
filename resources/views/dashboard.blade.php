@@ -16,7 +16,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
             <!-- Announcements Tile -->
-            <a href="{{ url('/announcements') }}"
+            <a href="{{ url('/public/announcements') }}"
                 class="bg-white border border-gray-200 rounded-xl shadow hover:shadow-lg transition p-8 text-center">
                 <h3 class="text-xl font-semibold mb-2">Announcements</h3>
                 <p class="text-gray-500">View the latest updates and news.</p>
