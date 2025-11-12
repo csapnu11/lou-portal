@@ -4,6 +4,9 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Enums\UserRole;
 Route::get('/', function () {
+    if (Auth::check()) {
+        return redirect('/dashboard');
+    }
     return view('welcome');
 });
 
@@ -25,8 +28,8 @@ Route::get('/public/announcements', fn() => view('public.announcements'));
 $privateRoutes = [
     '/private/faculty' => [UserRole::FACULTY, 'faculty'],
     '/private/student' => [UserRole::STUDENT, 'student'],
-    '/private/staff'   => [UserRole::STAFF, 'staff'],
-    '/private/admin'   => [UserRole::ADMIN, 'admin'],
+    '/private/staff' => [UserRole::STAFF, 'staff'],
+    '/private/admin' => [UserRole::ADMIN, 'admin'],
     '/private/classes' => [[UserRole::FACULTY, UserRole::STUDENT], 'classes'],
 ];
 
@@ -35,9 +38,9 @@ foreach ($privateRoutes as $uri => [$roles, $view]) {
     $rolesString = is_array($roles) ? implode(',', array_map(fn($r) => $r->value, $roles)) : $roles->value;
 
     Route::middleware(['auth', App\Http\Middleware\RoleMiddleware::class . ':' . $rolesString])
-         ->get($uri, fn() => view("private.$view"));
+        ->get($uri, fn() => view("private.$view"));
 }
 
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
